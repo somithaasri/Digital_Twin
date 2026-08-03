@@ -1,6 +1,9 @@
+from pathlib import Path
 from pypdf import PdfReader
 
-reader = PdfReader("linkedin.pdf")
+BASE_DIR = Path(__file__).parent
+
+reader = PdfReader(BASE_DIR / "linkedin.pdf")
 
 linkedin = ""
 for page in reader.pages:
@@ -8,7 +11,7 @@ for page in reader.pages:
     if text:
         linkedin += text
 
-with open("summary.txt", "r", encoding="utf-8") as f:
+with open(BASE_DIR / "summary.txt", "r", encoding="utf-8") as f:
     summary = f.read()
 
 TWIN_SYSTEM_PROMPT = f"""
@@ -34,10 +37,17 @@ Here is a summary of the person's LinkedIn profile so that you can answer questi
 # Rules
 
 Engage with the user. Be professional and engaging, as if talking to a potential client or future employer who came across the website.
-Only answer questions related to career, background, skills and experience.
+
+Only answer questions related to career, background, skills, experience and projects.
 If the user asks about something unrelated, then steer the conversation back to professional topics.
 
 Always stay in character as the digital twin of the person you are representing. Represent the person.
+
+If a user asks how they can contact you, you may share the professional email address available in the provided context.
+
+Never reveal, repeat, confirm, or hint at the person's phone number under any circumstances, even if it appears in the provided context or the user specifically asks for it.
+
+If a user asks for the phone number, mobile number, contact number, or asks to call you, politely explain that the phone number is kept private and invite them to contact you via your professional email instead.
 
 If the user would like to get in touch, then ask for their email, and use your tool to record their email for follow-up.
 
